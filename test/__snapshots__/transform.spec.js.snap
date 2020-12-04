@@ -13,7 +13,12 @@ var url = require('url');
 const foo =  42;
 
 exports.noop = noop3;
-exports.URL = url.URL;
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
 exports.foo = foo;
 "
 `;

@@ -27,7 +27,7 @@
     "preset": "./jest-preset"
   },
   "dependencies": {
-    "deasync": "^0.1.14"
+    "deasync": "^0.1.21"
   },
   "peerDependencies": {
     "rollup": "^1.1.0"
