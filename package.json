@@ -1,6 +1,6 @@
 {
   "name": "rollup-jest",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Rollup preprocessor for Jest",
   "repository": "ambar/rollup-jest",
   "license": "MIT",

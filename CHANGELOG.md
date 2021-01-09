@@ -1,0 +1,12 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## 1.0.0 (2021-01-09)
+
+
+### Features
+
+* replace deasync with execSync ([8daaef7](https://github.com/ambar/rollup-jest/commit/8daaef7a85812d8a58bc6c77cf73245bd24c4971))
+* update deasync ([6bc1dd9](https://github.com/ambar/rollup-jest/commit/6bc1dd9031c290b5d3966fc8bd734429eb494b24))
+* update rollup to v2 ([5ecfb12](https://github.com/ambar/rollup-jest/commit/5ecfb128565af103c1453d40fb1835dab0955ed0))
