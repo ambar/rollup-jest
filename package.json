@@ -27,12 +27,12 @@
     "preset": "./jest-preset"
   },
   "peerDependencies": {
-    "rollup": "^1.1.0"
+    "rollup": "^1.1.0 || ^2"
   },
   "devDependencies": {
     "deasync": "^0.1.21",
     "jest": "^26.6.3",
     "noop3": "^1000.0.0",
-    "rollup": "^1.1.0"
+    "rollup": "^2.36.1"
   }
 }

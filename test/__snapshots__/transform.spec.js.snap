@@ -5,14 +5,21 @@ exports[`process should process 1`] = `
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var noop3 = _interopDefault(require('noop3'));
+var noop3 = require('noop3');
 var url = require('url');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var noop3__default = /*#__PURE__*/_interopDefaultLegacy(noop3);
 
 const foo =  42;
 
-exports.noop = noop3;
+Object.defineProperty(exports, 'noop', {
+    enumerable: true,
+    get: function () {
+        return noop3__default['default'];
+    }
+});
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () {
