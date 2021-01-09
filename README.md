@@ -46,5 +46,6 @@ Happy testing!
 
 ## Related
 
+- [es-jest](https://github.com/ambar/es-jest)
 - [babel-jest](https://github.com/facebook/jest/tree/master/packages/babel-jest)
 - [ts-jest](https://github.com/kulshekhar/ts-jest)
