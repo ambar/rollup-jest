@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`process should process 1`] = `
+exports[`process should transform 1`] = `
 "'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });

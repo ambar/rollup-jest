@@ -44,6 +44,56 @@ test('parses extname', () => {
 
 Happy testing!
 
+## Configuration
+
+### Use `configFile` field
+
+```json
+{
+  "jest": {
+    "transform": {
+      "\\.js$": ["rollup-jest", {"configFile": "./rollup.config.js"}]
+    }
+  }
+}
+```
+
+`rollup.config.js`:
+
+```js
+import inject from '@rollup/plugin-inject'
+
+let config
+if (process.env.NODE_ENV === 'test') {
+  config = {
+    plugins: [inject({React: 'react'})],
+  }
+}
+
+export default config
+```
+
+### Use inline config
+
+```json
+{
+  "jest": {
+    "transform": {
+      "\\.js$": [
+        "rollup-jest",
+        {"plugins": [["@rollup/plugin-inject", {"React": "react"}]]}
+      ]
+    }
+  }
+}
+```
+
+Sample `rollup.config.js`:
+
+```js
+export default process.env.NODE_ENV ? ... : ...
+```
+
 ## Related
 
 - [es-jest](https://github.com/ambar/es-jest)
