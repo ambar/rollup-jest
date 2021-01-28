@@ -3,6 +3,7 @@ const {execSync} = require('child_process')
 const {callbackify} = require('util')
 const {builtinModules} = require('module')
 const {isAbsolute} = require('path')
+const concatMerge = require('./lib/concatMerge')
 
 // resolve module in memory without accessing the file system
 const memory = ({file, code}) => {
@@ -33,14 +34,17 @@ const external = () => {
 }
 
 // transform ESM to CJS
-const transform = async ({file, code}) => {
-  const {generate} = await rollup.rollup({
+const transform = async ({file, code}, options) => {
+  const defaults = {
     input: file,
+    output: {
+      format: 'cjs',
+    },
     plugins: [memory({file, code}), external()],
-  })
-  const {output} = await generate({
-    format: 'cjs',
-  })
+  }
+  const rollupOptions = concatMerge(defaults, options)
+  const {generate} = await rollup.rollup(rollupOptions)
+  const {output} = await generate(rollupOptions.output)
   return output[0].code
 }
 
@@ -50,11 +54,24 @@ exports.transform = transform
 // const transformSync = deasync(callbackify(transform))
 const cli = require.resolve('./cli.js')
 
-exports.process = (code, file) => {
+const findOptions = (transform, file) => {
+  if (!Array.isArray(transform)) {
+    return null
+  }
+
+  const t = transform.find(
+    ([pattern, transformer]) =>
+      transformer === __filename && RegExp(pattern).test(file)
+  )
+  return t ? t[2] : null
+}
+
+exports.process = (code, file, config) => {
+  const options = findOptions(config.transform, file)
   // https://github.com/facebook/jest/pull/9889
   return execSync(
     `node --unhandled-rejections=strict --abort-on-uncaught-exception "${cli}"`,
-    {env: {...process.env, code, file}}
+    {env: {...process.env, code, file, options: JSON.stringify(options)}}
   ).toString()
 
   // Jest 26 (with Node 12) is not working with deasync
