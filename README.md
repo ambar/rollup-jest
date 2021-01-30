@@ -88,12 +88,6 @@ export default config
 }
 ```
 
-Sample `rollup.config.js`:
-
-```js
-export default process.env.NODE_ENV ? ... : ...
-```
-
 ## Related
 
 - [es-jest](https://github.com/ambar/es-jest)
