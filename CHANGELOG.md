@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/ambar/rollup-jest/compare/v1.0.1...v1.1.0) (2021-01-30)
+
+
+### Features
+
+* support transform opitons ([cec5db2](https://github.com/ambar/rollup-jest/commit/cec5db26697b769220dc9404d885135e985e8f1a))
+
 ### [1.0.1](https://github.com/ambar/rollup-jest/compare/v1.0.0...v1.0.1) (2021-01-09)
 
 
