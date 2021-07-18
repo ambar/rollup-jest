@@ -87,4 +87,18 @@ describe('process', () => {
       )
     ).toMatch(/noop3/)
   })
+
+  it('should add custom plugin with cjs config function', async () => {
+    const code = `noop()`
+    const file = './null.js'
+    expect(
+      await transform(
+        {code, file},
+        {
+          configFile: 'test/fixtures/config.cjs.js',
+          args: { noop: 'noop3' }
+        }
+      )
+    ).toMatch(/noop3/)
+  })
 })
