@@ -8,14 +8,14 @@ const {isAbsolute} = require('path')
 const concatMerge = require('concat-merge')
 
 // resolve module in memory without accessing the file system
-const memory = ({file, code}) => {
+const memory = ({file, code, useCache}) => {
   return {
     name: 'rollup-plugin-memory',
     resolveId(id) {
       return id === file ? id : null
     },
     load(id) {
-      return id === file ? code : null
+      return useCache && id === file ? code : null
     },
   }
 }
@@ -64,12 +64,14 @@ const requireConfig = async (filename, options) => {
 // transform ESM to CJS
 const transform = async ({file, code}, userOptions) => {
   const {configFile, args, ...options} = Object.assign({}, userOptions)
+  const useCache = 'useCache' in options ? options.useCache : true
+  delete options.useCache
   const defaults = {
     input: file,
     output: {
       format: 'cjs',
     },
-    plugins: [memory({file, code}), external()],
+    plugins: [memory({file, code, useCache}), external()],
   }
   let configFromFile
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {
