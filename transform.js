@@ -108,7 +108,7 @@ const findOptions = (transform, file) => {
 }
 
 exports.process = (code, file, config) => {
-  const options = findOptions(config.transform, file)
+  const options = config.transformerConfig || findOptions(config.transform, file)
   // https://github.com/facebook/jest/pull/9889
   return execSync(
     `node --unhandled-rejections=strict --abort-on-uncaught-exception "${cli}"`,
