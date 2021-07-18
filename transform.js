@@ -63,7 +63,7 @@ const requireConfig = async (filename, options) => {
 
 // transform ESM to CJS
 const transform = async ({file, code}, userOptions) => {
-  const {configFile, ...options} = Object.assign({}, userOptions)
+  const {configFile, args, ...options} = Object.assign({}, userOptions)
   const defaults = {
     input: file,
     output: {
@@ -75,18 +75,15 @@ const transform = async ({file, code}, userOptions) => {
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {
     configFromFile = await requireConfig(
       path.resolve(process.cwd(), configFile),
-      options
+      { ...args, ...options }
     )
   }
-  const rollupOptions = concatMerge(defaults, {
-    ...options,
-    plugins: (options.plugins || []).map((plugin) => {
-      if (Array.isArray(plugin) && typeof plugin[0] === 'string') {
-        return require(plugin[0])(plugin[1])
-      }
-      return plugin
-    }),
-    ...configFromFile,
+  const rollupOptions = concatMerge(concatMerge(defaults, options), configFromFile)
+  rollupOptions.plugins = (rollupOptions.plugins || []).map((plugin) => {
+    if (Array.isArray(plugin) && typeof plugin[0] === 'string') {
+      return require(plugin[0])(plugin[1])
+    }
+    return plugin
   })
   const {generate} = await rollup.rollup(rollupOptions)
   const {output} = await generate(rollupOptions.output)
