@@ -43,8 +43,8 @@ function requireSource(code, filename) {
   return newModule.exports
 }
 
-const requireConfig = async (filename) => {
-  return requireSource(
+const requireConfig = async (filename, options) => {
+  const config = requireSource(
     await transform(
       {
         file: filename,
@@ -56,6 +56,9 @@ const requireConfig = async (filename) => {
     ),
     filename
   )
+  if (typeof config === 'function')
+    return config(options)
+  return config
 }
 
 // transform ESM to CJS
@@ -71,7 +74,8 @@ const transform = async ({file, code}, userOptions) => {
   let configFromFile
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {
     configFromFile = await requireConfig(
-      path.resolve(process.cwd(), configFile)
+      path.resolve(process.cwd(), configFile),
+      options
     )
   }
   const rollupOptions = concatMerge(defaults, {
