@@ -27,7 +27,7 @@ const external = () => {
     name: 'rollup-plugin-external',
     resolveId(id) {
       // filter relative or absolute imported modules
-      if (builtins.includes(id) || !id.startsWith('.') || !isAbsolute(id)) {
+      if (builtins.includes(id) || (!id.startsWith('.') && !isAbsolute(id))) {
         return false
       }
       return null

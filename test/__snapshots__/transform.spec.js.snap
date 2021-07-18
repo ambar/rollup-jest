@@ -29,3 +29,12 @@ Object.defineProperty(exports, 'URL', {
 exports.foo = foo;
 "
 `;
+
+exports[`process should transform relative imports 1`] = `
+"'use strict';
+
+const foo = 42;
+
+console.log(foo);
+"
+`;

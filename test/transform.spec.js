@@ -1,5 +1,6 @@
 import inject from '@rollup/plugin-inject'
 import {transform} from '..'
+import {resolve} from 'path'
 
 describe('process', () => {
   const warn = jest.fn(console.warn)
@@ -16,6 +17,19 @@ describe('process', () => {
         export {URL} from 'url'
     `
     const file = './null.js'
+    expect(await transform({code, file})).toMatchSnapshot()
+    expect(warn.mock.calls.join('')).not.toMatch(
+      /could not be resolved – treating it as an external dependency/
+    )
+  })
+
+  it('should transform relative imports', async () => {
+    const code = `
+      import { foo } from './fixtures/utils'
+
+      console.log(foo)
+    `
+    const file = resolve(__dirname, './null.js')
     expect(await transform({code, file})).toMatchSnapshot()
     expect(warn.mock.calls.join('')).not.toMatch(
       /could not be resolved – treating it as an external dependency/
