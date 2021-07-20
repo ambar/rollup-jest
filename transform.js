@@ -4,7 +4,7 @@ const rollup = require('rollup')
 const {execSync} = require('child_process')
 const {promisify} = require('util')
 const Module = require('module')
-const {isAbsolute, dirname} = require('path')
+const {dirname} = require('path')
 const concatMerge = require('concat-merge')
 const {createHash} = require('crypto')
 
@@ -22,13 +22,12 @@ const memory = ({file, code, useCache}) => {
 }
 
 // mark third party or builtin modules as external
-const external = () => {
-  const builtins = Module.builtinModules.filter((m) => !m.startsWith('_'))
+const external = (resolveImports) => {
+  const builtins = Module.builtinModules
   return {
     name: 'rollup-plugin-external',
     resolveId(id) {
-      // filter relative or absolute imported modules
-      if (builtins.includes(id) || (!id.startsWith('.') && !isAbsolute(id))) {
+      if (!resolveImports || builtins.includes(id)) {
         return false
       }
       return null
@@ -63,7 +62,7 @@ const requireConfig = async (filename, options) => {
 }
 
 const loadOptions = async ({file, code}, userOptions) => {
-  const {configFile, args, ...options} = Object.assign({}, userOptions)
+  const {configFile, args, resolveImports, ...options} = Object.assign({}, userOptions)
   const useCache = 'useCache' in options ? options.useCache : true
   delete options.useCache
 
@@ -73,7 +72,7 @@ const loadOptions = async ({file, code}, userOptions) => {
       format: 'cjs',
       dir: dirname(file),
     },
-    plugins: [memory({file, code, useCache}), external()],
+    plugins: [memory({file, code, useCache}), external(resolveImports)],
   }
   let configFromFile
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {

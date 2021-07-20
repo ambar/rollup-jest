@@ -1,4 +1,5 @@
 import inject from '@rollup/plugin-inject'
+import nodeResolve from '@rollup/plugin-node-resolve';
 import {transform} from '..'
 import {resolve} from 'path'
 
@@ -36,14 +37,31 @@ describe('process', () => {
     )
   })
 
-  it('should transform relative imports', async () => {
+  it('should transform imports if requested', async () => {
     const code = `
       import { foo } from './fixtures/utils'
+      export {URL} from 'url'
 
       console.log(foo)
     `
     const file = resolve(__dirname, './null.js')
-    expect(await transform({code, file})).toMatchSnapshot()
+    expect(await transform({code, file}, {resolveImports: true})).toMatchSnapshot()
+    expect(warn.mock.calls.join('')).not.toMatch(
+      /could not be resolved – treating it as an external dependency/
+    )
+  })
+  
+  it('should transform imports if requested, with nodeResolve', async () => {
+    // for proper code, we'd also need commonjs to properly resolve noop3 (CJS module), but it's enough for the test
+    const code = `
+      import * as noop from 'noop3'
+      import { foo } from './fixtures/utils'
+      export {URL} from 'url'
+
+      console.log(foo, noop)
+    `
+    const file = resolve(__dirname, './null.js')
+    expect(await transform({code, file}, {resolveImports: true, plugins: [nodeResolve()]})).toMatchSnapshot()
     expect(warn.mock.calls.join('')).not.toMatch(
       /could not be resolved – treating it as an external dependency/
     )

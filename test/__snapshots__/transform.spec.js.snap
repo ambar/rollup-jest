@@ -78,11 +78,50 @@ exports.foo = foo;
 "
 `;
 
-exports[`process should transform relative imports 1`] = `
+exports[`process should transform imports if requested 1`] = `
 "'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var url = require('url');
 
 const foo = 42;
 
 console.log(foo);
+
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
+"
+`;
+
+exports[`process should transform imports if requested, with nodeResolve 1`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var url = require('url');
+
+const noopFactory = require('./factory');
+
+module.exports = noopFactory();
+
+var noop = /*#__PURE__*/Object.freeze({
+    __proto__: null
+});
+
+const foo = 42;
+
+console.log(foo, noop);
+
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
 "
 `;
