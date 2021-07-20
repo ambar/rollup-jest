@@ -30,9 +30,19 @@ Add preset to Jest config:
     },
   }
 }
+
+// or with options:
+// the preset enables sourcemaps by default
+{
+  "jest": {
+    "transform": {
+      "\\.m?js$": ["rollup-jest", {"output": {"sourcemap": true}}]
+    },
+  }
+}
 ```
 
-Writes your test with ES modules:
+Write your tests with ES modules:
 
 ```js
 import path from 'path'
@@ -87,6 +97,13 @@ export default config
   }
 }
 ```
+
+### All options
+
+- `useCache: boolean`: Default `true`. Enable caching of entry module. This can mess with plugins (e.g. typescript).
+- `resolveImports: 'relative' | boolean`: Default `false`. Resolve (bundle) imports, either all (incl. packages) or only relative files.
+- `args: any`: If your config file exports a function, you can use this field to pass arguments that aren't supported in rollup's `inputOptions`.
+- `plugins: Plugin[]`: Gets merged with plugins from config file. Special syntax `[name, options]` allows you to specify the plugin in json without `require`.
 
 ## Related
 
