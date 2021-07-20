@@ -100,6 +100,8 @@ const getCacheKey = async (code, file, userOptions) => {
   return createHash('md5')
     .update(JSON.stringify(rollupOptions))
     .update('\0', 'utf8')
+    .update(JSON.stringify(config))
+    .update('\0', 'utf8')
     .update(code)
     .update('\0', 'utf8')
     .update(file)
@@ -108,7 +110,7 @@ const getCacheKey = async (code, file, userOptions) => {
     .digest('hex')
 }
 
-const getCacheKeySync = (code, file, userOptions) => {
+const getCacheKeySync = (code, file, userOptions, jconfig) => {
   // this won't guard against rollup config imports changing, but it's better than nothing
   const {configFile} = Object.assign({}, userOptions)
   let config = ''
@@ -117,6 +119,8 @@ const getCacheKeySync = (code, file, userOptions) => {
   } catch {}
   return createHash('md5')
     .update(JSON.stringify(userOptions))
+    .update('\0', 'utf8')
+    .update(JSON.stringify(jconfig))
     .update('\0', 'utf8')
     .update(code)
     .update('\0', 'utf8')
@@ -185,7 +189,7 @@ exports.process = (code, file, config) => {
 }
 exports.getCacheKey = (code, file, config) => {
   const options = config.transformerConfig || findOptions(config.transform, file)
-  return getCacheKeySync(code, file, options)
+  return getCacheKeySync(code, file, options, config)
 }
 
 // async code transformations don't work yet, 
@@ -195,5 +199,5 @@ exports.processAsync = async (code, file, config) => {
 }
 exports.getCacheKeyAsync = async (code, file, config) => {
   const options = config.transformerConfig || findOptions(config.transform, file)
-  return await getCacheKey(code, file, options)
+  return await getCacheKey(code, file, options, config)
 }
