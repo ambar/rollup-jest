@@ -67,6 +67,21 @@ describe('process', () => {
     )
   })
 
+  it('should transform imports if requested relative', async () => {
+    const code = `
+      import * as noop from 'noop3'
+      import { foo } from './fixtures/utils'
+      export {URL} from 'url'
+
+      console.log(foo, noop)
+    `
+    const file = resolve(__dirname, './null.js')
+    expect(await transform({code, file}, {resolveImports: 'relative'})).toMatchSnapshot()
+    expect(warn.mock.calls.join('')).not.toMatch(
+      /could not be resolved – treating it as an external dependency/
+    )
+  })
+
   it('should add custom plugin', async () => {
     const code = `noop()`
     const file = './null.js'
@@ -128,6 +143,19 @@ describe('process', () => {
         {
           configFile: 'test/fixtures/config.cjs.js',
           args: { noop: 'noop3' }
+        }
+      )
+    ).toMatch(/noop3/)
+  })
+
+  it('should add custom plugin with esm config that imports esm config', async () => {
+    const code = `noop()`
+    const file = './null.js'
+    expect(
+      await transform(
+        {code, file},
+        {
+          configFile: 'test/fixtures/config.import.js',
         }
       )
     ).toMatch(/noop3/)

@@ -98,6 +98,49 @@ Object.defineProperty(exports, 'URL', {
 "
 `;
 
+exports[`process should transform imports if requested relative 1`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var noop = require('noop3');
+var url = require('url');
+
+function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () {
+                        return e[k];
+                    }
+                });
+            }
+        });
+    }
+    n['default'] = e;
+    return Object.freeze(n);
+}
+
+var noop__namespace = /*#__PURE__*/_interopNamespace(noop);
+
+const foo = 42;
+
+console.log(foo, noop__namespace);
+
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
+"
+`;
+
 exports[`process should transform imports if requested, with nodeResolve 1`] = `
 "'use strict';
 

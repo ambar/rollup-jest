@@ -4,7 +4,7 @@ const rollup = require('rollup')
 const {execSync} = require('child_process')
 const {promisify} = require('util')
 const Module = require('module')
-const {dirname} = require('path')
+const {dirname, isAbsolute} = require('path')
 const concatMerge = require('concat-merge')
 const {createHash} = require('crypto')
 
@@ -27,7 +27,7 @@ const external = (resolveImports) => {
   return {
     name: 'rollup-plugin-external',
     resolveId(id) {
-      if (!resolveImports || builtins.includes(id)) {
+      if (!resolveImports || builtins.includes(id) || (resolveImports === 'relative' && !(id.startsWith('.') || isAbsolute(id)))) {
         return false
       }
       return null
@@ -52,6 +52,7 @@ const requireConfig = async (filename, options) => {
       },
       {
         output: {exports: 'auto'},
+        resolveImports: 'relative',
       }
     ),
     filename
