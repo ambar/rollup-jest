@@ -2,9 +2,9 @@ const fs = require('fs')
 const path = require('path')
 const rollup = require('rollup')
 const {execSync} = require('child_process')
-const {callbackify, promisify} = require('util')
+const {promisify} = require('util')
 const Module = require('module')
-const {isAbsolute} = require('path')
+const {isAbsolute, dirname} = require('path')
 const concatMerge = require('concat-merge')
 
 // resolve module in memory without accessing the file system
@@ -61,7 +61,12 @@ const requireConfig = async (filename, options) => {
   return config
 }
 
-// transform ESM to CJS
+/**
+ * transform ESM to CJS
+ * @param {{file: string, code: string}} input
+ * @param {{[key:string]: any}} userOptions 
+ * @returns {Promise<string | {code: string, map: string | null}>}
+ */
 const transform = async ({file, code}, userOptions) => {
   const {configFile, args, ...options} = Object.assign({}, userOptions)
   const useCache = 'useCache' in options ? options.useCache : true
@@ -70,6 +75,7 @@ const transform = async ({file, code}, userOptions) => {
     input: file,
     output: {
       format: 'cjs',
+      dir: dirname(file),
     },
     plugins: [memory({file, code, useCache}), external()],
   }
@@ -77,7 +83,7 @@ const transform = async ({file, code}, userOptions) => {
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {
     configFromFile = await requireConfig(
       path.resolve(process.cwd(), configFile),
-      { ...args, ...options }
+      {...args, ...options}
     )
   }
   const rollupOptions = concatMerge(concatMerge(defaults, options), configFromFile)
@@ -89,7 +95,11 @@ const transform = async ({file, code}, userOptions) => {
   })
   const {generate} = await rollup.rollup(rollupOptions)
   const {output} = await generate(rollupOptions.output)
-  return output[0].code
+  const {code: out, map} = output[0]
+  if (rollupOptions.output.sourcemap)
+    return {code: out, map}
+  else
+    return out
 }
 
 exports.transform = transform
@@ -113,10 +123,10 @@ const findOptions = (transform, file) => {
 exports.process = (code, file, config) => {
   const options = config.transformerConfig || findOptions(config.transform, file)
   // https://github.com/facebook/jest/pull/9889
-  return execSync(
+  return JSON.parse(execSync(
     `node --unhandled-rejections=strict --abort-on-uncaught-exception "${cli}"`,
     {env: {...process.env, code, file, options: JSON.stringify(options)}}
-  ).toString()
+  ).toString())
 
   // Jest 26 (with Node 12) is not working with deasync
   // return transformSync({file, code})

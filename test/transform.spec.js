@@ -23,6 +23,19 @@ describe('process', () => {
     )
   })
 
+  it('should provide a sourcemap if requested', async () => {
+    const code = `
+        export const foo =  42
+        export {default as noop} from 'noop3'
+        export {URL} from 'url'
+    `
+    const file = './null.js'
+    expect(await transform({code, file}, {output: {sourcemap: true}})).toMatchSnapshot()
+    expect(warn.mock.calls.join('')).not.toMatch(
+      /could not be resolved – treating it as an external dependency/
+    )
+  })
+
   it('should transform relative imports', async () => {
     const code = `
       import { foo } from './fixtures/utils'
