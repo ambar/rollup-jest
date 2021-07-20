@@ -6,6 +6,7 @@ const {promisify} = require('util')
 const Module = require('module')
 const {isAbsolute, dirname} = require('path')
 const concatMerge = require('concat-merge')
+const {createHash} = require('crypto')
 
 // resolve module in memory without accessing the file system
 const memory = ({file, code, useCache}) => {
@@ -35,7 +36,7 @@ const external = () => {
   }
 }
 
-function requireSource(code, filename) {
+const requireSource = (code, filename) => {
   const newModule = new Module(filename, module)
   newModule.paths = Module._nodeModulePaths(path.dirname(filename))
   newModule.filename = filename
@@ -61,16 +62,11 @@ const requireConfig = async (filename, options) => {
   return config
 }
 
-/**
- * transform ESM to CJS
- * @param {{file: string, code: string}} input
- * @param {{[key:string]: any}} userOptions 
- * @returns {Promise<string | {code: string, map: string | null}>}
- */
-const transform = async ({file, code}, userOptions) => {
+const loadOptions = async ({file, code}, userOptions) => {
   const {configFile, args, ...options} = Object.assign({}, userOptions)
   const useCache = 'useCache' in options ? options.useCache : true
   delete options.useCache
+
   const defaults = {
     input: file,
     output: {
@@ -93,13 +89,61 @@ const transform = async ({file, code}, userOptions) => {
     }
     return plugin
   })
+  return rollupOptions
+}
+
+/**
+ * @see https://github.com/facebook/jest/blob/master/packages/babel-jest/src/index.ts#L199
+ */
+const getCacheKey = async (code, file, userOptions) => {
+  const rollupOptions = await loadOptions({code, file}, userOptions)
+  return createHash('md5')
+    .update(JSON.stringify(rollupOptions))
+    .update('\0', 'utf8')
+    .update(code)
+    .update('\0', 'utf8')
+    .update(file)
+    .update('\0', 'utf8')
+    .update(process.env.NODE_ENV || '')
+    .digest('hex')
+}
+
+const getCacheKeySync = (code, file, userOptions) => {
+  // this won't guard against rollup config imports changing, but it's better than nothing
+  const {configFile} = Object.assign({}, userOptions)
+  let config = ''
+  try {
+    config = fs.readFileSync(configFile)
+  } catch {}
+  return createHash('md5')
+    .update(JSON.stringify(userOptions))
+    .update('\0', 'utf8')
+    .update(code)
+    .update('\0', 'utf8')
+    .update(file)
+    .update('\0', 'utf8')
+    .update(config)
+    .update('\0', 'utf8')
+    .update(process.env.NODE_ENV || '')
+    .digest('hex')
+}
+
+/**
+ * transform ESM to CJS
+ * @param {{file: string, code: string}} input
+ * @param {{[key:string]: any}} userOptions 
+ * @returns {Promise<string | {code: string, map: string | null}>}
+ */
+const transform = async (input, userOptions) => {
+  const rollupOptions = await loadOptions(input, userOptions)
+  
   const {generate} = await rollup.rollup(rollupOptions)
   const {output} = await generate(rollupOptions.output)
-  const {code: out, map} = output[0]
+  const {code, map} = output[0]
   if (rollupOptions.output.sourcemap)
-    return {code: out, map}
+    return {code, map}
   else
-    return out
+    return code
 }
 
 exports.transform = transform
@@ -108,6 +152,12 @@ exports.transform = transform
 // const transformSync = deasync(callbackify(transform))
 const cli = require.resolve('./cli.js')
 
+/**
+ * Find options from config.transform
+ * @param {{[key:string]: string|any[]}} transform 
+ * @param {string} file 
+ * @returns {{[key:string]:any}}
+ */
 const findOptions = (transform, file) => {
   if (!Array.isArray(transform)) {
     return null
@@ -120,6 +170,8 @@ const findOptions = (transform, file) => {
   return t ? t[2] : null
 }
 
+exports.canInstrument = false
+
 exports.process = (code, file, config) => {
   const options = config.transformerConfig || findOptions(config.transform, file)
   // https://github.com/facebook/jest/pull/9889
@@ -131,3 +183,11 @@ exports.process = (code, file, config) => {
   // Jest 26 (with Node 12) is not working with deasync
   // return transformSync({file, code})
 }
+exports.getCacheKey = getCacheKeySync
+
+// async code transformations don't work yet, 
+exports.processAsync = async (code, file, config) => {
+  const options = config.transformerConfig || findOptions(config.transform, file)
+  return await transform({code, file}, options)
+}
+exports.getCacheKeyAsync = getCacheKey
