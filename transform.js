@@ -183,11 +183,17 @@ exports.process = (code, file, config) => {
   // Jest 26 (with Node 12) is not working with deasync
   // return transformSync({file, code})
 }
-exports.getCacheKey = getCacheKeySync
+exports.getCacheKey = (code, file, config) => {
+  const options = config.transformerConfig || findOptions(config.transform, file)
+  return getCacheKeySync(code, file, options)
+}
 
 // async code transformations don't work yet, 
 exports.processAsync = async (code, file, config) => {
   const options = config.transformerConfig || findOptions(config.transform, file)
   return await transform({code, file}, options)
 }
-exports.getCacheKeyAsync = getCacheKey
+exports.getCacheKeyAsync = async (code, file, config) => {
+  const options = config.transformerConfig || findOptions(config.transform, file)
+  return await getCacheKey(code, file, options)
+}
