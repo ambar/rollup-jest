@@ -1,5 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`process should provide a sourcemap if requested 1`] = `
+Object {
+  "code": "'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var noop3 = require('noop3');
+var url = require('url');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var noop3__default = /*#__PURE__*/_interopDefaultLegacy(noop3);
+
+const foo =  42;
+
+Object.defineProperty(exports, 'noop', {
+    enumerable: true,
+    get: function () {
+        return noop3__default['default'];
+    }
+});
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
+exports.foo = foo;
+",
+  "map": SourceMap {
+    "file": "null.js",
+    "mappings": ";;;;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;;;;;",
+    "names": Array [],
+    "sources": Array [
+      "null.js",
+    ],
+    "sourcesContent": Array [
+      "
+        export const foo =  42
+        export {default as noop} from 'noop3'
+        export {URL} from 'url'
+    ",
+    ],
+    "version": 3,
+  },
+}
+`;
+
 exports[`process should transform 1`] = `
 "'use strict';
 
@@ -27,5 +75,96 @@ Object.defineProperty(exports, 'URL', {
     }
 });
 exports.foo = foo;
+"
+`;
+
+exports[`process should transform imports if requested 1`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var url = require('url');
+
+const foo = 42;
+
+console.log(foo);
+
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
+"
+`;
+
+exports[`process should transform imports if requested relative 1`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var noop = require('noop3');
+var url = require('url');
+
+function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () {
+                        return e[k];
+                    }
+                });
+            }
+        });
+    }
+    n['default'] = e;
+    return Object.freeze(n);
+}
+
+var noop__namespace = /*#__PURE__*/_interopNamespace(noop);
+
+const foo = 42;
+
+console.log(foo, noop__namespace);
+
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
+"
+`;
+
+exports[`process should transform imports if requested, with nodeResolve 1`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var url = require('url');
+
+const noopFactory = require('./factory');
+
+module.exports = noopFactory();
+
+var noop = /*#__PURE__*/Object.freeze({
+    __proto__: null
+});
+
+const foo = 42;
+
+console.log(foo, noop);
+
+Object.defineProperty(exports, 'URL', {
+    enumerable: true,
+    get: function () {
+        return url.URL;
+    }
+});
 "
 `;
