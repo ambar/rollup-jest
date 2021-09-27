@@ -95,7 +95,7 @@ const loadOptions = async ({file, code}, userOptions) => {
 /**
  * @see https://github.com/facebook/jest/blob/master/packages/babel-jest/src/index.ts#L199
  */
-const getCacheKey = async (code, file, userOptions) => {
+const getCacheKey = async (code, file, userOptions, config) => {
   const rollupOptions = await loadOptions({code, file}, userOptions)
   return createHash('md5')
     .update(JSON.stringify(rollupOptions))
@@ -192,7 +192,7 @@ exports.getCacheKey = (code, file, config) => {
   return getCacheKeySync(code, file, options, config)
 }
 
-// async code transformations don't work yet, 
+// async code transformation work only for ESM modules (see https://jestjs.io/docs/ecmascript-modules)
 exports.processAsync = async (code, file, config) => {
   const options = config.transformerConfig || findOptions(config.transform, file)
   return await transform({code, file}, options)
