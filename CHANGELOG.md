@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](https://github.com/ambar/rollup-jest/compare/v1.1.2...v1.1.3) (2021-09-28)
+
+
+### Bug Fixes
+
+* fix async undeclared variable ([#18](https://github.com/ambar/rollup-jest/issues/18)) ([c8abf25](https://github.com/ambar/rollup-jest/commit/c8abf25cbbc90638ef3a7fda56ab95cbec806861))
+
 ### [1.1.2](https://github.com/ambar/rollup-jest/compare/v1.1.1...v1.1.2) (2021-07-21)
 
 ## [1.1.0](https://github.com/ambar/rollup-jest/compare/v1.0.1...v1.1.0) (2021-01-30)
