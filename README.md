@@ -3,7 +3,6 @@
 Rollup preprocessor for Jest.
 
 [![Coverage Status](https://coveralls.io/repos/github/ambar/rollup-jest/badge.svg?branch=master)](https://coveralls.io/github/ambar/rollup-jest?branch=master)
-[![build status](https://badgen.net/travis/ambar/rollup-jest)](https://travis-ci.org/ambar/rollup-jest)
 [![npm version](https://badgen.net/npm/v/rollup-jest)](https://www.npmjs.com/package/rollup-jest)
 
 ## Install
