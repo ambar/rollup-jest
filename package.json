@@ -25,7 +25,10 @@
     "transform.js"
   ],
   "jest": {
-    "preset": "./jest-preset"
+    "preset": "./jest-preset",
+    "coveragePathIgnorePatterns": [
+      "test"
+    ]
   },
   "dependencies": {
     "concat-merge": "^1.0.2"
