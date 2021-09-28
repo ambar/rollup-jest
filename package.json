@@ -36,7 +36,7 @@
   "devDependencies": {
     "@rollup/plugin-inject": "^4.0.2",
     "@rollup/plugin-node-resolve": "^13.0.2",
-    "jest": "^26.6.3",
+    "jest": "^27.2.2",
     "noop3": "^1000.0.0",
     "rollup": "^2.36.1"
   }
