@@ -36,7 +36,6 @@
   "devDependencies": {
     "@rollup/plugin-inject": "^4.0.2",
     "@rollup/plugin-node-resolve": "^13.0.2",
-    "deasync": "^0.1.21",
     "jest": "^26.6.3",
     "noop3": "^1000.0.0",
     "rollup": "^2.36.1"
