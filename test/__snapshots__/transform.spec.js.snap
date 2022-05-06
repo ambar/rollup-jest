@@ -17,21 +17,17 @@ const foo =  42;
 
 Object.defineProperty(exports, 'noop', {
     enumerable: true,
-    get: function () {
-        return noop3__default['default'];
-    }
+    get: function () { return noop3__default[\\"default\\"]; }
 });
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
-    get: function () {
-        return url.URL;
-    }
+    get: function () { return url.URL; }
 });
 exports.foo = foo;
 ",
   "map": SourceMap {
     "file": "null.js",
-    "mappings": ";;;;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;;;;;",
+    "mappings": ";;;;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;",
     "names": Array [],
     "sources": Array [
       "null.js",
@@ -64,15 +60,11 @@ const foo =  42;
 
 Object.defineProperty(exports, 'noop', {
     enumerable: true,
-    get: function () {
-        return noop3__default['default'];
-    }
+    get: function () { return noop3__default[\\"default\\"]; }
 });
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
-    get: function () {
-        return url.URL;
-    }
+    get: function () { return url.URL; }
 });
 exports.foo = foo;
 "
@@ -91,9 +83,7 @@ console.log(foo);
 
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
-    get: function () {
-        return url.URL;
-    }
+    get: function () { return url.URL; }
 });
 "
 `;
@@ -115,14 +105,12 @@ function _interopNamespace(e) {
                 var d = Object.getOwnPropertyDescriptor(e, k);
                 Object.defineProperty(n, k, d.get ? d : {
                     enumerable: true,
-                    get: function () {
-                        return e[k];
-                    }
+                    get: function () { return e[k]; }
                 });
             }
         });
     }
-    n['default'] = e;
+    n[\\"default\\"] = e;
     return Object.freeze(n);
 }
 
@@ -134,9 +122,7 @@ console.log(foo, noop__namespace);
 
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
-    get: function () {
-        return url.URL;
-    }
+    get: function () { return url.URL; }
 });
 "
 `;
@@ -162,9 +148,7 @@ console.log(foo, noop);
 
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
-    get: function () {
-        return url.URL;
-    }
+    get: function () { return url.URL; }
 });
 "
 `;
