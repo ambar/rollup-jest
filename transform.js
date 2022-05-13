@@ -27,7 +27,12 @@ const external = (resolveImports) => {
   return {
     name: 'rollup-plugin-external',
     resolveId(id) {
-      if (!resolveImports || builtins.includes(id) || (resolveImports === 'relative' && !(id.startsWith('.') || isAbsolute(id)))) {
+      if (
+        !resolveImports ||
+        builtins.includes(id) ||
+        (resolveImports === 'relative' &&
+          !(id.startsWith('.') || isAbsolute(id)))
+      ) {
         return false
       }
       return null
@@ -57,13 +62,15 @@ const requireConfig = async (filename, options) => {
     ),
     filename
   )
-  if (typeof config === 'function')
-    return config(options)
+  if (typeof config === 'function') return config(options)
   return config
 }
 
 const loadOptions = async ({file, code}, userOptions) => {
-  const {configFile, args, resolveImports, ...options} = Object.assign({}, userOptions)
+  const {configFile, args, resolveImports, ...options} = Object.assign(
+    {},
+    userOptions
+  )
   const useCache = 'useCache' in options ? options.useCache : true
   delete options.useCache
 
@@ -82,7 +89,10 @@ const loadOptions = async ({file, code}, userOptions) => {
       {...args, ...options}
     )
   }
-  const rollupOptions = concatMerge(concatMerge(defaults, options), configFromFile)
+  const rollupOptions = concatMerge(
+    concatMerge(defaults, options),
+    configFromFile
+  )
   rollupOptions.plugins = (rollupOptions.plugins || []).map((plugin) => {
     if (Array.isArray(plugin) && typeof plugin[0] === 'string') {
       return require(plugin[0])(plugin[1])
@@ -135,19 +145,17 @@ const getCacheKeySync = (code, file, userOptions, jconfig) => {
 /**
  * transform ESM to CJS
  * @param {{file: string, code: string}} input
- * @param {{[key:string]: any}} userOptions 
+ * @param {{[key:string]: any}} userOptions
  * @returns {Promise<string | {code: string, map: string | null}>}
  */
 const transform = async (input, userOptions) => {
   const rollupOptions = await loadOptions(input, userOptions)
-  
+
   const {generate} = await rollup.rollup(rollupOptions)
   const {output} = await generate(rollupOptions.output)
   const {code, map} = output[0]
-  if (rollupOptions.output.sourcemap)
-    return {code, map}
-  else
-    return code
+  if (rollupOptions.output.sourcemap) return {code, map}
+  else return code
 }
 
 exports.transform = transform
@@ -158,8 +166,8 @@ const cli = require.resolve('./cli.js')
 
 /**
  * Find options from config.transform
- * @param {{[key:string]: string|any[]}} transform 
- * @param {string} file 
+ * @param {{[key:string]: string|any[]}} transform
+ * @param {string} file
  * @returns {{[key:string]:any}}
  */
 const findOptions = (transform, file) => {
@@ -177,27 +185,33 @@ const findOptions = (transform, file) => {
 exports.canInstrument = false
 
 exports.process = (code, file, config) => {
-  const options = config.transformerConfig || findOptions(config.transform, file)
+  const options =
+    config.transformerConfig || findOptions(config.transform, file)
   // https://github.com/facebook/jest/pull/9889
-  return JSON.parse(execSync(
-    `node --unhandled-rejections=strict --abort-on-uncaught-exception "${cli}"`,
-    {env: {...process.env, code, file, options: JSON.stringify(options)}}
-  ).toString())
+  return JSON.parse(
+    execSync(
+      `node --unhandled-rejections=strict --abort-on-uncaught-exception "${cli}"`,
+      {env: {...process.env, code, file, options: JSON.stringify(options)}}
+    ).toString()
+  )
 
   // Jest 26 (with Node 12) is not working with deasync
   // return transformSync({file, code})
 }
 exports.getCacheKey = (code, file, config) => {
-  const options = config.transformerConfig || findOptions(config.transform, file)
+  const options =
+    config.transformerConfig || findOptions(config.transform, file)
   return getCacheKeySync(code, file, options, config)
 }
 
 // async code transformation work only for ESM modules (see https://jestjs.io/docs/ecmascript-modules)
 exports.processAsync = async (code, file, config) => {
-  const options = config.transformerConfig || findOptions(config.transform, file)
+  const options =
+    config.transformerConfig || findOptions(config.transform, file)
   return await transform({code, file}, options)
 }
 exports.getCacheKeyAsync = async (code, file, config) => {
-  const options = config.transformerConfig || findOptions(config.transform, file)
+  const options =
+    config.transformerConfig || findOptions(config.transform, file)
   return await getCacheKey(code, file, options, config)
 }

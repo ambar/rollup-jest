@@ -1,5 +1,5 @@
 import inject from '@rollup/plugin-inject'
-import nodeResolve from '@rollup/plugin-node-resolve';
+import nodeResolve from '@rollup/plugin-node-resolve'
 import {transform} from '..'
 import {resolve} from 'path'
 
@@ -31,7 +31,9 @@ describe('process', () => {
         export {URL} from 'url'
     `
     const file = './null.js'
-    expect(await transform({code, file}, {output: {sourcemap: true}})).toMatchSnapshot()
+    expect(
+      await transform({code, file}, {output: {sourcemap: true}})
+    ).toMatchSnapshot()
     expect(warn.mock.calls.join('')).not.toMatch(
       /could not be resolved – treating it as an external dependency/
     )
@@ -45,12 +47,14 @@ describe('process', () => {
       console.log(foo)
     `
     const file = resolve(__dirname, './null.js')
-    expect(await transform({code, file}, {resolveImports: true})).toMatchSnapshot()
+    expect(
+      await transform({code, file}, {resolveImports: true})
+    ).toMatchSnapshot()
     expect(warn.mock.calls.join('')).not.toMatch(
       /could not be resolved – treating it as an external dependency/
     )
   })
-  
+
   it('should transform imports if requested, with nodeResolve', async () => {
     // for proper code, we'd also need commonjs to properly resolve noop3 (CJS module), but it's enough for the test
     const code = `
@@ -61,7 +65,12 @@ describe('process', () => {
       console.log(foo, noop)
     `
     const file = resolve(__dirname, './null.js')
-    expect(await transform({code, file}, {resolveImports: true, plugins: [nodeResolve()]})).toMatchSnapshot()
+    expect(
+      await transform(
+        {code, file},
+        {resolveImports: true, plugins: [nodeResolve()]}
+      )
+    ).toMatchSnapshot()
     expect(warn.mock.calls.join('')).not.toMatch(
       /could not be resolved – treating it as an external dependency/
     )
@@ -76,7 +85,9 @@ describe('process', () => {
       console.log(foo, noop)
     `
     const file = resolve(__dirname, './null.js')
-    expect(await transform({code, file}, {resolveImports: 'relative'})).toMatchSnapshot()
+    expect(
+      await transform({code, file}, {resolveImports: 'relative'})
+    ).toMatchSnapshot()
     expect(warn.mock.calls.join('')).not.toMatch(
       /could not be resolved – treating it as an external dependency/
     )
@@ -142,7 +153,7 @@ describe('process', () => {
         {code, file},
         {
           configFile: 'test/fixtures/config.cjs.js',
-          args: { noop: 'noop3' }
+          args: {noop: 'noop3'},
         }
       )
     ).toMatch(/noop3/)
