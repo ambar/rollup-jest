@@ -45,7 +45,8 @@ exports.foo = foo;
 `;
 
 exports[`process should transform 1`] = `
-"'use strict';
+Object {
+  "code": "'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -67,11 +68,29 @@ Object.defineProperty(exports, 'URL', {
     get: function () { return url.URL; }
 });
 exports.foo = foo;
-"
+",
+  "map": SourceMap {
+    "file": "null.js",
+    "mappings": ";;;;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;",
+    "names": Array [],
+    "sources": Array [
+      "null.js",
+    ],
+    "sourcesContent": Array [
+      "
+        export const foo =  42
+        export {default as noop} from 'noop3'
+        export {URL} from 'url'
+    ",
+    ],
+    "version": 3,
+  },
+}
 `;
 
 exports[`process should transform imports if requested 1`] = `
-"'use strict';
+Object {
+  "code": "'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -85,11 +104,33 @@ Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
-"
+",
+  "map": SourceMap {
+    "file": "null.js",
+    "mappings": ";;;;;;AAAO,MAAM,GAAG,GAAG;;ACIb,OAAO,CAAC,GAAG,CAAC,GAAG;;;;;;;",
+    "names": Array [],
+    "sources": Array [
+      "fixtures/utils.js",
+      "null.js",
+    ],
+    "sourcesContent": Array [
+      "export const foo = 42
+",
+      "
+      import { foo } from './fixtures/utils'
+      export {URL} from 'url'
+
+      console.log(foo)
+    ",
+    ],
+    "version": 3,
+  },
+}
 `;
 
 exports[`process should transform imports if requested relative 1`] = `
-"'use strict';
+Object {
+  "code": "'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -124,11 +165,36 @@ Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
-"
+",
+  "map": SourceMap {
+    "file": "null.js",
+    "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;AAAO,MAAM,GAAG,GAAG;;ACKb,OAAO,CAAC,GAAG,CAAC,GAAG,EAAEA,eAAI;;;;;;;",
+    "names": Array [
+      "noop",
+    ],
+    "sources": Array [
+      "fixtures/utils.js",
+      "null.js",
+    ],
+    "sourcesContent": Array [
+      "export const foo = 42
+",
+      "
+      import * as noop from 'noop3'
+      import { foo } from './fixtures/utils'
+      export {URL} from 'url'
+
+      console.log(foo, noop)
+    ",
+    ],
+    "version": 3,
+  },
+}
 `;
 
 exports[`process should transform imports if requested, with nodeResolve 1`] = `
-"'use strict';
+Object {
+  "code": "'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -150,5 +216,33 @@ Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
-"
+",
+  "map": SourceMap {
+    "file": "null.js",
+    "mappings": ";;;;;;AACA,MAAM,WAAW,GAAG,OAAO,CAAC,WAAW,CAAC,CAAC;AACzC;AACA,MAAM,CAAC,OAAO,GAAG,WAAW,EAAE;;;;;;ACHvB,MAAM,GAAG,GAAG;;ACKb,OAAO,CAAC,GAAG,CAAC,GAAG,EAAE,IAAI;;;;;;;",
+    "names": Array [],
+    "sources": Array [
+      "../node_modules/noop3/index.js",
+      "fixtures/utils.js",
+      "null.js",
+    ],
+    "sourcesContent": Array [
+      "'use strict';
+const noopFactory = require('./factory');
+
+module.exports = noopFactory();
+",
+      "export const foo = 42
+",
+      "
+      import * as noop from 'noop3'
+      import { foo } from './fixtures/utils'
+      export {URL} from 'url'
+
+      console.log(foo, noop)
+    ",
+    ],
+    "version": 3,
+  },
+}
 `;

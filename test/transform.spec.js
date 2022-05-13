@@ -96,79 +96,73 @@ describe('process', () => {
   it('should add custom plugin', async () => {
     const code = `noop()`
     const file = './null.js'
-    expect(
-      await transform(
-        {code, file},
-        {
-          plugins: [inject({noop: 'noop3'})],
-        }
-      )
-    ).toMatch(/noop3/)
+    const result = await transform(
+      {code, file},
+      {
+        plugins: [inject({noop: 'noop3'})],
+      }
+    )
+    expect(result.code).toMatch(/noop3/)
   })
 
   it('should add custom plugin with babel-like require', async () => {
     const code = `noop()`
     const file = './null.js'
-    expect(
-      await transform(
-        {code, file},
-        {
-          plugins: [['@rollup/plugin-inject', {noop: 'noop3'}]],
-        }
-      )
-    ).toMatch(/noop3/)
+    const result = await transform(
+      {code, file},
+      {
+        plugins: [['@rollup/plugin-inject', {noop: 'noop3'}]],
+      }
+    )
+    expect(result.code).toMatch(/noop3/)
   })
 
   it('should add custom plugin with cjs config', async () => {
     const code = `noop()`
     const file = './null.js'
-    expect(
-      await transform(
-        {code, file},
-        {
-          configFile: 'test/fixtures/config.cjs.js',
-        }
-      )
-    ).toMatch(/noop3/)
+    const result = await transform(
+      {code, file},
+      {
+        configFile: 'test/fixtures/config.cjs.js',
+      }
+    )
+    expect(result.code).toMatch(/noop3/)
   })
 
   it('should add custom plugin with esm config', async () => {
     const code = `noop()`
     const file = './null.js'
-    expect(
-      await transform(
-        {code, file},
-        {
-          configFile: 'test/fixtures/config.esm.js',
-        }
-      )
-    ).toMatch(/noop3/)
+    const result = await transform(
+      {code, file},
+      {
+        configFile: 'test/fixtures/config.esm.js',
+      }
+    )
+    expect(result.code).toMatch(/noop3/)
   })
 
   it('should add custom plugin with cjs config function', async () => {
     const code = `noop()`
     const file = './null.js'
-    expect(
-      await transform(
-        {code, file},
-        {
-          configFile: 'test/fixtures/config.cjs.js',
-          args: {noop: 'noop3'},
-        }
-      )
-    ).toMatch(/noop3/)
+    const result = await transform(
+      {code, file},
+      {
+        configFile: 'test/fixtures/config.cjs.js',
+        args: {noop: 'noop3'},
+      }
+    )
+    expect(result.code).toMatch(/noop3/)
   })
 
   it('should add custom plugin with esm config that imports esm config', async () => {
     const code = `noop()`
     const file = './null.js'
-    expect(
-      await transform(
-        {code, file},
-        {
-          configFile: 'test/fixtures/config.import.js',
-        }
-      )
-    ).toMatch(/noop3/)
+    const result = await transform(
+      {code, file},
+      {
+        configFile: 'test/fixtures/config.import.js',
+      }
+    )
+    expect(result.code).toMatch(/noop3/)
   })
 })

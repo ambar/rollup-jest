@@ -49,19 +49,17 @@ const requireSource = (code, filename) => {
 }
 
 const requireConfig = async (filename, options) => {
-  const config = requireSource(
-    await transform(
-      {
-        file: filename,
-        code: (await promisify(fs.readFile)(filename)).toString(),
-      },
-      {
-        output: {exports: 'auto'},
-        resolveImports: 'relative',
-      }
-    ),
-    filename
+  const result = await transform(
+    {
+      file: filename,
+      code: (await promisify(fs.readFile)(filename)).toString(),
+    },
+    {
+      output: {exports: 'auto'},
+      resolveImports: 'relative',
+    }
   )
+  const config = requireSource(result.code, filename)
   if (typeof config === 'function') return config(options)
   return config
 }
@@ -74,9 +72,11 @@ const loadOptions = async ({file, code}, userOptions) => {
   const useCache = 'useCache' in options ? options.useCache : true
   delete options.useCache
 
+  /** @type {import('rollup').RollupOptions} */
   const defaults = {
     input: file,
     output: {
+      sourcemap: true,
       format: 'cjs',
       dir: dirname(file),
     },
@@ -146,7 +146,7 @@ const getCacheKeySync = (code, file, userOptions, jconfig) => {
  * transform ESM to CJS
  * @param {{file: string, code: string}} input
  * @param {{[key:string]: any}} userOptions
- * @returns {Promise<string | {code: string, map: string | null}>}
+ * @returns {Promise<{code: string, map: string | null}>}
  */
 const transform = async (input, userOptions) => {
   const rollupOptions = await loadOptions(input, userOptions)
@@ -154,8 +154,7 @@ const transform = async (input, userOptions) => {
   const {generate} = await rollup.rollup(rollupOptions)
   const {output} = await generate(rollupOptions.output)
   const {code, map} = output[0]
-  if (rollupOptions.output.sourcemap) return {code, map}
-  else return code
+  return {code, map: rollupOptions.output.sourcemap ? map : null}
 }
 
 exports.transform = transform

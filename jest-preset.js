@@ -6,7 +6,7 @@ module.exports = {
   transform: {
     '\\.m?js$': [
       path.resolve(__dirname, 'transform.js'),
-      {output: {sourcemap: false}},
+      // RollupOptions,
     ],
   },
 }
