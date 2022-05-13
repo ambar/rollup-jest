@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/ambar/rollup-jest/compare/v1.1.3...v2.0.0) (2022-05-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* enable sourcemap by default
+
+### Features
+
+* enable sourcemap by default ([6e401d3](https://github.com/ambar/rollup-jest/commit/6e401d33d2fc4489adca47e14beb39613e77e030)), closes [#22](https://github.com/ambar/rollup-jest/issues/22)
+
 ### [1.1.3](https://github.com/ambar/rollup-jest/compare/v1.1.2...v1.1.3) (2021-09-28)
 
 
