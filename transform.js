@@ -7,6 +7,7 @@ const Module = require('module')
 const {dirname, isAbsolute} = require('path')
 const concatMerge = require('concat-merge')
 const {createHash} = require('crypto')
+const loadAndParseConfigFile = require('rollup/dist/loadConfigFile')
 
 // resolve module in memory without accessing the file system
 const memory = ({file, code, useCache}) => {
@@ -40,30 +41,6 @@ const external = (resolveImports) => {
   }
 }
 
-const requireSource = (code, filename) => {
-  const newModule = new Module(filename, module)
-  newModule.paths = Module._nodeModulePaths(path.dirname(filename))
-  newModule.filename = filename
-  newModule._compile(code, filename)
-  return newModule.exports
-}
-
-const requireConfig = async (filename, options) => {
-  const result = await transform(
-    {
-      file: filename,
-      code: (await promisify(fs.readFile)(filename)).toString(),
-    },
-    {
-      output: {exports: 'auto'},
-      resolveImports: 'relative',
-    }
-  )
-  const config = requireSource(result.code, filename)
-  if (typeof config === 'function') return config(options)
-  return config
-}
-
 const loadOptions = async ({file, code}, userOptions) => {
   const {configFile, args, resolveImports, ...options} = Object.assign(
     {},
@@ -84,10 +61,16 @@ const loadOptions = async ({file, code}, userOptions) => {
   }
   let configFromFile
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {
-    configFromFile = await requireConfig(
+    ({ options: [configFromFile] } = await loadAndParseConfigFile(
       path.resolve(process.cwd(), configFile),
       {...args, ...options}
-    )
+    ))
+    if (configFromFile.length)
+      console.warn('rollup-jest: Ignored `input` field in rollup config')
+    delete configFromFile.input
+    if (configFromFile.output.length !== 1)
+      console.warn('rollup-jest: Config should output exactly one file')
+    configFromFile.output = configFromFile.output[0]
   }
   const rollupOptions = concatMerge(
     concatMerge(defaults, options),
@@ -101,6 +84,8 @@ const loadOptions = async ({file, code}, userOptions) => {
   })
   return rollupOptions
 }
+
+exports.loadOptions = loadOptions
 
 /**
  * @see https://github.com/facebook/jest/blob/master/packages/babel-jest/src/index.ts#L199
