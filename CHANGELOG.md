@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ambar/rollup-jest/compare/v2.0.0...v3.0.0) (2022-06-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* update rollup version to ^2.3.0 in peer dependencies
+
+### Features
+
+* update rollup version to ^2.3.0 in peer dependencies ([38c8a1f](https://github.com/ambar/rollup-jest/commit/38c8a1f0191a989c69e6f95a03e788b88106667e)), closes [#23](https://github.com/ambar/rollup-jest/issues/23)
+
 ## [2.0.0](https://github.com/ambar/rollup-jest/compare/v1.1.3...v2.0.0) (2022-05-13)
 
 
