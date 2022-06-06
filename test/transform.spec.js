@@ -148,7 +148,7 @@ describe('process', () => {
       {code, file},
       {
         configFile: 'test/fixtures/config.cjs.js',
-        args: {noop: 'noop3'},
+        args: {banner: '/** banner */'},
       }
     )
     expect(result.code).toMatch(/noop3/)
