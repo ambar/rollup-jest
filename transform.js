@@ -61,10 +61,12 @@ const loadOptions = async ({file, code}, userOptions) => {
   }
   let configFromFile
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {
-    ({ options: [configFromFile] } = await loadAndParseConfigFile(
-      path.resolve(process.cwd(), configFile),
-      {...args, ...options}
-    ))
+    ;({
+      options: [configFromFile],
+    } = await loadAndParseConfigFile(path.resolve(process.cwd(), configFile), {
+      ...args,
+      ...options,
+    }))
     if (configFromFile.length)
       console.warn('rollup-jest: Ignored `input` field in rollup config')
     delete configFromFile.input
@@ -172,12 +174,17 @@ exports.process = (code, file, config) => {
   const options =
     config.transformerConfig || findOptions(config.transform, file)
   // https://github.com/facebook/jest/pull/9889
-  return JSON.parse(
-    execSync(
-      `node --unhandled-rejections=strict --abort-on-uncaught-exception "${cli}"`,
-      {env: {...process.env, code, file, options: JSON.stringify(options)}}
-    ).toString()
-  )
+  const stdout = execSync(
+    `node --unhandled-rejections=strict --abort-on-uncaught-exception "${cli}"`,
+    {env: {...process.env, code, file, options: JSON.stringify(options)}}
+  ).toString()
+  // add a tag filter to allow debug messages
+  const jsonTag = 'json:'
+  const jsonString = stdout
+    .split('\n')
+    .find((x) => x.startsWith(jsonTag))
+    .replace(jsonTag, '')
+  return JSON.parse(jsonString)
 
   // Jest 26 (with Node 12) is not working with deasync
   // return transformSync({file, code})
