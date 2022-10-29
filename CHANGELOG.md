@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/ambar/rollup-jest/compare/v3.0.0...v3.1.0) (2022-10-29)
+
+
+### Features
+
+* support Rollup v3 ([3dabc6b](https://github.com/ambar/rollup-jest/commit/3dabc6b72d5bfa4c15a99755a50f65422a465c2d)), closes [#24](https://github.com/ambar/rollup-jest/issues/24)
+
 ## [3.0.0](https://github.com/ambar/rollup-jest/compare/v2.0.0...v3.0.0) (2022-06-06)
 
 
