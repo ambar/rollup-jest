@@ -25,7 +25,7 @@ jobs:
       - name: test
         run: |
           yarn
-          yarn jest --coverage
+          yarn test:coverage
       - name: report
         uses: coverallsapp/github-action@v1.0.1
         with:
