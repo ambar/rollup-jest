@@ -7,7 +7,9 @@ const Module = require('module')
 const {dirname, isAbsolute} = require('path')
 const concatMerge = require('concat-merge')
 const {createHash} = require('crypto')
-const loadAndParseConfigFile = require('rollup/dist/loadConfigFile')
+const loadConfigFileEntry = require('rollup/loadConfigFile')
+// v3 || v2
+const loadConfigFile = loadConfigFileEntry.loadConfigFile || loadConfigFileEntry
 
 // resolve module in memory without accessing the file system
 const memory = ({file, code, useCache}) => {
@@ -55,6 +57,7 @@ const loadOptions = async ({file, code}, userOptions) => {
     output: {
       sourcemap: true,
       format: 'cjs',
+      interop: 'auto',
       dir: dirname(file),
     },
     plugins: [memory({file, code, useCache}), external(resolveImports)],
@@ -63,7 +66,9 @@ const loadOptions = async ({file, code}, userOptions) => {
   if (configFile && (await promisify(fs.stat)(configFile).catch(() => false))) {
     ;({
       options: [configFromFile],
-    } = await loadAndParseConfigFile(path.resolve(process.cwd(), configFile), {
+    } = await loadConfigFile(path.resolve(process.cwd(), configFile), {
+      format: 'cjs',
+      interop: 'auto',
       ...args,
       ...options,
     }))
@@ -137,7 +142,6 @@ const getCacheKeySync = (code, file, userOptions, jconfig) => {
  */
 const transform = async (input, userOptions) => {
   const rollupOptions = await loadOptions(input, userOptions)
-
   const {generate} = await rollup.rollup(rollupOptions)
   const {output} = await generate(rollupOptions.output)
   const {code, map} = output[0]
@@ -189,6 +193,7 @@ exports.process = (code, file, config) => {
   // Jest 26 (with Node 12) is not working with deasync
   // return transformSync({file, code})
 }
+
 exports.getCacheKey = (code, file, config) => {
   const options =
     config.transformerConfig || findOptions(config.transform, file)

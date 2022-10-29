@@ -4,30 +4,29 @@ exports[`process should provide a sourcemap if requested 1`] = `
 Object {
   "code": "'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var noop3 = require('noop3');
 var url = require('url');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
 
-var noop3__default = /*#__PURE__*/_interopDefaultLegacy(noop3);
+var noop3__default = /*#__PURE__*/_interopDefault(noop3);
 
 const foo =  42;
 
 Object.defineProperty(exports, 'noop', {
     enumerable: true,
-    get: function () { return noop3__default[\\"default\\"]; }
+    get: function () { return noop3__default.default; }
 });
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
 exports.foo = foo;
+//# sourceMappingURL=null.js.map
 ",
   "map": SourceMap {
     "file": "null.js",
-    "mappings": ";;;;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;",
+    "mappings": ";;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;",
     "names": Array [],
     "sources": Array [
       "null.js",
@@ -48,30 +47,29 @@ exports[`process should transform 1`] = `
 Object {
   "code": "'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var noop3 = require('noop3');
 var url = require('url');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
 
-var noop3__default = /*#__PURE__*/_interopDefaultLegacy(noop3);
+var noop3__default = /*#__PURE__*/_interopDefault(noop3);
 
 const foo =  42;
 
 Object.defineProperty(exports, 'noop', {
     enumerable: true,
-    get: function () { return noop3__default[\\"default\\"]; }
+    get: function () { return noop3__default.default; }
 });
 Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
 exports.foo = foo;
+//# sourceMappingURL=null.js.map
 ",
   "map": SourceMap {
     "file": "null.js",
-    "mappings": ";;;;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;",
+    "mappings": ";;;;;;;;;AACoB,MAAC,GAAG,IAAI;;;;;;;;;;;;",
     "names": Array [],
     "sources": Array [
       "null.js",
@@ -92,8 +90,6 @@ exports[`process should transform imports if requested 1`] = `
 Object {
   "code": "'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var url = require('url');
 
 const foo = 42;
@@ -104,10 +100,11 @@ Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
+//# sourceMappingURL=null.js.map
 ",
   "map": SourceMap {
     "file": "null.js",
-    "mappings": ";;;;;;AAAO,MAAM,GAAG,GAAG;;ACIb,OAAO,CAAC,GAAG,CAAC,GAAG;;;;;;;",
+    "mappings": ";;;;AAAO,MAAM,GAAG,GAAG;;ACIb,OAAO,CAAC,GAAG,CAAC,GAAG;;;;;;;",
     "names": Array [],
     "sources": Array [
       "fixtures/utils.js",
@@ -132,8 +129,6 @@ exports[`process should transform imports if requested relative 1`] = `
 Object {
   "code": "'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var noop = require('noop3');
 var url = require('url');
 
@@ -151,7 +146,7 @@ function _interopNamespace(e) {
             }
         });
     }
-    n[\\"default\\"] = e;
+    n.default = e;
     return Object.freeze(n);
 }
 
@@ -165,10 +160,11 @@ Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
+//# sourceMappingURL=null.js.map
 ",
   "map": SourceMap {
     "file": "null.js",
-    "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;AAAO,MAAM,GAAG,GAAG;;ACKb,OAAO,CAAC,GAAG,CAAC,GAAG,EAAEA,eAAI;;;;;;;",
+    "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;AAAO,MAAM,GAAG,GAAG;;ACKb,OAAO,CAAC,GAAG,CAAC,GAAG,EAAEA,eAAI;;;;;;;",
     "names": Array [
       "noop",
     ],
@@ -196,8 +192,6 @@ exports[`process should transform imports if requested, with nodeResolve 1`] = `
 Object {
   "code": "'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var url = require('url');
 
 const noopFactory = require('./factory');
@@ -216,10 +210,11 @@ Object.defineProperty(exports, 'URL', {
     enumerable: true,
     get: function () { return url.URL; }
 });
+//# sourceMappingURL=null.js.map
 ",
   "map": SourceMap {
     "file": "null.js",
-    "mappings": ";;;;;;AACA,MAAM,WAAW,GAAG,OAAO,CAAC,WAAW,CAAC,CAAC;AACzC;AACA,MAAM,CAAC,OAAO,GAAG,WAAW,EAAE;;;;;;ACHvB,MAAM,GAAG,GAAG;;ACKb,OAAO,CAAC,GAAG,CAAC,GAAG,EAAE,IAAI;;;;;;;",
+    "mappings": ";;;;AACA,MAAM,WAAW,GAAG,OAAO,CAAC,WAAW,CAAC,CAAC;AACzC;AACA,MAAM,CAAC,OAAO,GAAG,WAAW,EAAE;;;;;;ACHvB,MAAM,GAAG,GAAG;;ACKb,OAAO,CAAC,GAAG,CAAC,GAAG,EAAE,IAAI;;;;;;;",
     "names": Array [],
     "sources": Array [
       "../node_modules/noop3/index.js",

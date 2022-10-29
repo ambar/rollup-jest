@@ -58,6 +58,8 @@ Happy testing!
 
 ### Use `configFile` field
 
+NOTE: To use ESM format `configFile` in Rollup v3, you should add `--experimental-vm-module` flag to run jest，eg. `NODE_OPTIONS=--experimental-vm-modules npm run test`
+
 ```json
 {
   "jest": {
@@ -73,7 +75,7 @@ Happy testing!
 ```js
 import inject from '@rollup/plugin-inject'
 
-let config
+let config = {}
 if (process.env.NODE_ENV === 'test') {
   config = {
     plugins: [inject({React: 'react'})],
